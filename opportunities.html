@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities | CampusConnect</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .opportunities-page {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        .opportunities-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .opportunities-header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .opportunities-header p {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .post-opportunity {
+            background: #5b5ce2;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .opportunity-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+        }
+
+        .opportunity-card h3 {
+            margin: 10px 0 7px;
+        }
+
+        .opportunity-card p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .opportunity-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #eef0ff;
+            color: #5b5ce2;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .opportunity-meta {
+            margin-top: 14px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .apply-btn {
+            margin-top: 15px;
+            padding: 9px 16px;
+            border: none;
+            border-radius: 7px;
+            background: #5b5ce2;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .opportunity-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .opportunity-modal.show {
+            display: flex;
+        }
+
+        .opportunity-box {
+            width: 90%;
+            max-width: 550px;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .close-opportunity {
+            position: absolute;
+            right: 18px;
+            top: 12px;
+            border: none;
+            background: none;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .opportunity-box label {
+            display: block;
+            margin: 15px 0 6px;
+            font-weight: 600;
+        }
+
+        .opportunity-box input,
+        .opportunity-box select,
+        .opportunity-box textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .opportunity-box textarea {
+            min-height: 100px;
+        }
+
+        .submit-opportunity {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #5b5ce2;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="opportunities-page">
+
+    <div class="opportunities-header">
+        <div>
+            <h1>💼 Opportunities</h1>
+            <p>Find internships, jobs, workshops and competitions.</p>
+        </div>
+
+        <button class="post-opportunity" id="openOpportunity">
+            + Post Opportunity
+        </button>
+    </div>
+
+    <div id="opportunitiesList"></div>
+
+</div>
+
+
+<!-- POST OPPORTUNITY MODAL -->
+
+<div class="opportunity-modal" id="opportunityModal">
+
+    <div class="opportunity-box">
+
+        <button class="close-opportunity" id="closeOpportunity">
+            ×
+        </button>
+
+        <h2>Post an Opportunity</h2>
+
+        <form id="opportunityForm">
+
+            <label>Opportunity Title</label>
+            <input
+                type="text"
+                id="opportunityTitle"
+                placeholder="Example: Frontend Developer Intern"
+                required
+            >
+
+            <label>Type</label>
+
+            <select id="opportunityType" required>
+                <option value="">Select Type</option>
+                <option>Internship</option>
+                <option>Job</option>
+                <option>Workshop</option>
+                <option>Competition</option>
+            </select>
+
+            <label>Organization</label>
+
+            <input
+                type="text"
+                id="opportunityCompany"
+                placeholder="Company / Organization"
+                required
+            >
+
+            <label>Description</label>
+
+            <textarea
+                id="opportunityDescription"
+                placeholder="Describe the opportunity..."
+                required
+            ></textarea>
+
+            <button
+                type="submit"
+                class="submit-opportunity"
+            >
+                Post Opportunity
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const opportunityModal =
+    document.getElementById("opportunityModal");
+
+const openOpportunity =
+    document.getElementById("openOpportunity");
+
+const closeOpportunity =
+    document.getElementById("closeOpportunity");
+
+const opportunityForm =
+    document.getElementById("opportunityForm");
+
+const opportunitiesList =
+    document.getElementById("opportunitiesList");
+
+
+openOpportunity.onclick = function () {
+    opportunityModal.classList.add("show");
+};
+
+
+closeOpportunity.onclick = function () {
+    opportunityModal.classList.remove("show");
+};
+
+
+function displayOpportunities() {
+
+    let opportunities =
+        JSON.parse(
+            localStorage.getItem("campusOpportunities")
+        ) || [];
+
+    if (opportunities.length === 0) {
+
+        opportunities = [
+            {
+                title: "Frontend Developer Intern",
+                type: "Internship",
+                company: "TechNova Solutions",
+                description:
+                    "Work on modern web applications using HTML, CSS and JavaScript."
+            },
+            {
+                title: "National Innovation Challenge",
+                type: "Competition",
+                company: "Innovation Council",
+                description:
+                    "Participate in a student innovation and technology challenge."
+            },
+            {
+                title: "AI & Machine Learning Workshop",
+                type: "Workshop",
+                company: "CampusConnect",
+                description:
+                    "Learn the fundamentals of artificial intelligence and machine learning."
+            }
+        ];
+
+        localStorage.setItem(
+            "campusOpportunities",
+            JSON.stringify(opportunities)
+        );
+    }
+
+
+    opportunitiesList.innerHTML =
+        opportunities.map(opportunity => `
+
+            <div class="opportunity-card">
+
+                <span class="opportunity-tag">
+                    ${opportunity.type}
+                </span>
+
+                <h3>
+                    ${opportunity.title}
+                </h3>
+
+                <strong>
+                    ${opportunity.company}
+                </strong>
+
+                <p>
+                    ${opportunity.description}
+                </p>
+
+                <div class="opportunity-meta">
+                    🎓 Student Opportunity
+                </div>
+
+                <button
+                    class="apply-btn"
+                    onclick="applyOpportunity('${opportunity.title}')"
+                >
+                    View / Apply
+                </button>
+
+            </div>
+
+        `).join("");
+}
+
+
+function applyOpportunity(title) {
+
+    alert(
+        "You selected: " +
+        title +
+        "\n\nApplication details will be available soon."
+    );
+
+}
+
+
+opportunityForm.onsubmit = function (event) {
+
+    event.preventDefault();
+
+    const opportunities =
+        JSON.parse(
+            localStorage.getItem("campusOpportunities")
+        ) || [];
+
+    opportunities.push({
+
+        title:
+            document
+                .getElementById("opportunityTitle")
+                .value
+                .trim(),
+
+        type:
+            document
+                .getElementById("opportunityType")
+                .value,
+
+        company:
+            document
+                .getElementById("opportunityCompany")
+                .value
+                .trim(),
+
+        description:
+            document
+                .getElementById("opportunityDescription")
+                .value
+                .trim()
+
+    });
+
+
+    localStorage.setItem(
+        "campusOpportunities",
+        JSON.stringify(opportunities)
+    );
+
+
+    opportunityForm.reset();
+
+    opportunityModal.classList.remove("show");
+
+    displayOpportunities();
+
+    alert("Opportunity posted successfully! 🎉");
+};
+
+
+displayOpportunities();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found | CampusConnect</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .lost-page {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        .lost-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .lost-header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .lost-header p {
+            color: #777;
+        }
+
+        .report-btn {
+            background: #5b5ce2;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .lost-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+        }
+
+        .lost-card h3 {
+            margin: 10px 0;
+        }
+
+        .lost-card p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .lost-tag {
+            display: inline-block;
+            background: #fff1f2;
+            color: #e11d48;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .found-tag {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .lost-meta {
+            font-size: 13px;
+            color: #777;
+            margin-top: 12px;
+        }
+
+        .claim-btn {
+            margin-top: 15px;
+            padding: 9px 16px;
+            border: none;
+            border-radius: 7px;
+            background: #5b5ce2;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .lost-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .lost-modal.show {
+            display: flex;
+        }
+
+        .lost-box {
+            width: 90%;
+            max-width: 550px;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .close-lost {
+            position: absolute;
+            right: 18px;
+            top: 12px;
+            border: none;
+            background: none;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .lost-box label {
+            display: block;
+            margin: 15px 0 6px;
+            font-weight: 600;
+        }
+
+        .lost-box input,
+        .lost-box select,
+        .lost-box textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .lost-box textarea {
+            min-height: 100px;
+        }
+
+        .submit-lost {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #5b5ce2;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="lost-page">
+
+    <div class="lost-header">
+        <div>
+            <h1>🔍 Lost & Found</h1>
+            <p>Report lost items and help other students find their belongings.</p>
+        </div>
+
+        <button class="report-btn" id="openLost">
+            + Report Item
+        </button>
+    </div>
+
+    <div id="lostList"></div>
+
+</div>
+
+
+<div class="lost-modal" id="lostModal">
+
+    <div class="lost-box">
+
+        <button class="close-lost" id="closeLost">
+            ×
+        </button>
+
+        <h2>Report Lost / Found Item</h2>
+
+        <form id="lostForm">
+
+            <label>Item Name</label>
+
+            <input
+                type="text"
+                id="itemName"
+                placeholder="Example: Black Wallet"
+                required
+            >
+
+            <label>Status</label>
+
+            <select id="itemStatus" required>
+                <option value="">Select Status</option>
+                <option value="Lost">Lost</option>
+                <option value="Found">Found</option>
+            </select>
+
+            <label>Location</label>
+
+            <input
+                type="text"
+                id="itemLocation"
+                placeholder="Example: Library"
+                required
+            >
+
+            <label>Description</label>
+
+            <textarea
+                id="itemDescription"
+                placeholder="Describe the item..."
+                required
+            ></textarea>
+
+            <button
+                type="submit"
+                class="submit-lost"
+            >
+                Submit Report
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const lostModal =
+    document.getElementById("lostModal");
+
+const openLost =
+    document.getElementById("openLost");
+
+const closeLost =
+    document.getElementById("closeLost");
+
+const lostForm =
+    document.getElementById("lostForm");
+
+const lostList =
+    document.getElementById("lostList");
+
+
+openLost.onclick = function () {
+    lostModal.classList.add("show");
+};
+
+
+closeLost.onclick = function () {
+    lostModal.classList.remove("show");
+};
+
+
+function displayLostItems() {
+
+    let items =
+        JSON.parse(
+            localStorage.getItem("campusLostItems")
+        ) || [];
+
+    if (items.length === 0) {
+
+        items = [
+            {
+                name: "Black Wallet",
+                status: "Lost",
+                location: "Library",
+                description:
+                    "Black wallet lost near the reading section."
+            },
+            {
+                name: "Blue Water Bottle",
+                status: "Found",
+                location: "Cafeteria",
+                description:
+                    "Blue bottle found near the cafeteria tables."
+            }
+        ];
+
+        localStorage.setItem(
+            "campusLostItems",
+            JSON.stringify(items)
+        );
+    }
+
+
+    lostList.innerHTML =
+        items.map((item, index) => `
+
+            <div class="lost-card">
+
+                <span class="${item.status === "Found"
+                    ? "lost-tag found-tag"
+                    : "lost-tag"}">
+                    ${item.status}
+                </span>
+
+                <h3>
+                    ${item.name}
+                </h3>
+
+                <p>
+                    ${item.description}
+                </p>
+
+                <div class="lost-meta">
+                    📍 ${item.location}
+                </div>
+
+                <button
+                    class="claim-btn"
+                    onclick="contactOwner('${item.name}')"
+                >
+                    Contact / Claim
+                </button>
+
+            </div>
+
+        `).join("");
+}
+
+
+function contactOwner(name) {
+
+    alert(
+        "You selected: " +
+        name +
+        "\n\nContact details can be added in a future version."
+    );
+
+}
+
+
+lostForm.onsubmit = function (event) {
+
+    event.preventDefault();
+
+    const items =
+        JSON.parse(
+            localStorage.getItem("campusLostItems")
+        ) || [];
+
+    items.push({
+
+        name:
+            document.getElementById("itemName").value.trim(),
+
+        status:
+            document.getElementById("itemStatus").value,
+
+        location:
+            document.getElementById("itemLocation").value.trim(),
+
+        description:
+            document.getElementById("itemDescription").value.trim()
+
+    });
+
+    localStorage.setItem(
+        "campusLostItems",
+        JSON.stringify(items)
+    );
+
+    lostForm.reset();
+
+    lostModal.classList.remove("show");
+
+    displayLostItems();
+
+    alert("Lost & Found report submitted! 🎉");
+};
+
+
+displayLostItems();
+
+</script>
+
+</body>
+</html>

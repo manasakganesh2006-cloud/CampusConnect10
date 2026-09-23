@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Events | CampusConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .events-page {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .events-header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .events-header p {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .add-event-btn {
+            background: #5b5ce2;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .event-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+        }
+
+        .event-date {
+            display: inline-block;
+            background: #eef0ff;
+            color: #5b5ce2;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .event-card h3 {
+            margin: 12px 0 8px;
+        }
+
+        .event-card p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .event-info {
+            color: #777;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        .register-event {
+            margin-top: 15px;
+            padding: 9px 17px;
+            border: none;
+            border-radius: 7px;
+            background: #5b5ce2;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .event-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .event-modal.show {
+            display: flex;
+        }
+
+        .event-box {
+            width: 90%;
+            max-width: 550px;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .close-event {
+            position: absolute;
+            right: 18px;
+            top: 12px;
+            border: none;
+            background: none;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .event-box label {
+            display: block;
+            margin: 15px 0 6px;
+            font-weight: 600;
+        }
+
+        .event-box input,
+        .event-box textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .event-box textarea {
+            min-height: 100px;
+        }
+
+        .submit-event {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #5b5ce2;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="events-page">
+
+    <div class="events-header">
+
+        <div>
+            <h1>📅 Campus Events</h1>
+            <p>Discover workshops, hackathons, cultural events and more.</p>
+        </div>
+
+        <button
+            class="add-event-btn"
+            id="openEvent"
+        >
+            + Add Event
+        </button>
+
+    </div>
+
+    <div id="eventsList"></div>
+
+</div>
+
+
+<!-- EVENT MODAL -->
+
+<div
+    class="event-modal"
+    id="eventModal"
+>
+
+    <div class="event-box">
+
+        <button
+            class="close-event"
+            id="closeEvent"
+        >
+            ×
+        </button>
+
+        <h2>Add Campus Event</h2>
+
+        <form id="eventForm">
+
+            <label>Event Name</label>
+
+            <input
+                type="text"
+                id="eventName"
+                placeholder="Example: Coding Workshop"
+                required
+            >
+
+            <label>Date</label>
+
+            <input
+                type="date"
+                id="eventDate"
+                required
+            >
+
+            <label>Location</label>
+
+            <input
+                type="text"
+                id="eventLocation"
+                placeholder="Example: Seminar Hall"
+                required
+            >
+
+            <label>Description</label>
+
+            <textarea
+                id="eventDescription"
+                placeholder="Describe the event..."
+                required
+            ></textarea>
+
+            <button
+                type="submit"
+                class="submit-event"
+            >
+                Add Event
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const eventModal =
+    document.getElementById("eventModal");
+
+const openEvent =
+    document.getElementById("openEvent");
+
+const closeEvent =
+    document.getElementById("closeEvent");
+
+const eventForm =
+    document.getElementById("eventForm");
+
+const eventsList =
+    document.getElementById("eventsList");
+
+
+openEvent.onclick = function () {
+    eventModal.classList.add("show");
+};
+
+
+closeEvent.onclick = function () {
+    eventModal.classList.remove("show");
+};
+
+
+function displayEvents() {
+
+    let events =
+        JSON.parse(
+            localStorage.getItem("campusEvents")
+        ) || [];
+
+    if (events.length === 0) {
+
+        events = [
+
+            {
+                name: "Campus Hackathon 2026",
+                date: "2026-09-18",
+                location: "Innovation Lab",
+                description:
+                    "A campus-wide coding and innovation challenge."
+            },
+
+            {
+                name: "Career & Internship Workshop",
+                date: "2026-09-24",
+                location: "Seminar Hall",
+                description:
+                    "Learn about internships, resumes and career preparation."
+            },
+
+            {
+                name: "Campus Cultural Fest",
+                date: "2026-09-30",
+                location: "Main Auditorium",
+                description:
+                    "Celebrate talent, culture and creativity with students."
+            }
+
+        ];
+
+        localStorage.setItem(
+            "campusEvents",
+            JSON.stringify(events)
+        );
+    }
+
+
+    eventsList.innerHTML =
+        events.map(event => `
+
+            <div class="event-card">
+
+                <span class="event-date">
+                    📅 ${event.date}
+                </span>
+
+                <h3>
+                    ${event.name}
+                </h3>
+
+                <p>
+                    ${event.description}
+                </p>
+
+                <div class="event-info">
+                    📍 ${event.location}
+                </div>
+
+                <button
+                    class="register-event"
+                    onclick="registerEvent('${event.name}')"
+                >
+                    Register
+                </button>
+
+            </div>
+
+        `).join("");
+}
+
+
+function registerEvent(name) {
+
+    alert(
+        "You registered for:\n\n" +
+        name +
+        "\n\nRegistration successful! 🎉"
+    );
+
+}
+
+
+eventForm.onsubmit = function(event) {
+
+    event.preventDefault();
+
+    const events =
+        JSON.parse(
+            localStorage.getItem("campusEvents")
+        ) || [];
+
+    events.push({
+
+        name:
+            document
+                .getElementById("eventName")
+                .value
+                .trim(),
+
+        date:
+            document
+                .getElementById("eventDate")
+                .value,
+
+        location:
+            document
+                .getElementById("eventLocation")
+                .value
+                .trim(),
+
+        description:
+            document
+                .getElementById("eventDescription")
+                .value
+                .trim()
+
+    });
+
+
+    localStorage.setItem(
+        "campusEvents",
+        JSON.stringify(events)
+    );
+
+
+    eventForm.reset();
+
+    eventModal.classList.remove("show");
+
+    displayEvents();
+
+    alert("Event added successfully! 🎉");
+
+};
+
+
+displayEvents();
+
+</script>
+
+</body>
+</html>

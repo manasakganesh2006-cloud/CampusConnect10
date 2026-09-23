@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions | CampusConnect</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .questions-page {
+            padding: 40px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .questions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .questions-header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .questions-header p {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .ask-btn {
+            background: #5b5ce2;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .question-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+        }
+
+        .question-card h3 {
+            margin: 0 0 8px;
+        }
+
+        .question-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .question-meta {
+            font-size: 12px;
+            color: #777;
+            margin-top: 15px;
+        }
+
+        .question-category {
+            display: inline-block;
+            background: #eef0ff;
+            color: #5b5ce2;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .empty-questions {
+            text-align: center;
+            padding: 60px;
+            color: #777;
+            background: white;
+            border-radius: 14px;
+        }
+
+        .question-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .question-modal.show {
+            display: flex;
+        }
+
+        .question-box {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            padding: 30px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .question-box h2 {
+            margin-top: 0;
+        }
+
+        .close-question {
+            position: absolute;
+            right: 18px;
+            top: 12px;
+            border: none;
+            background: none;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .question-box label {
+            display: block;
+            margin: 15px 0 6px;
+            font-weight: 600;
+        }
+
+        .question-box input,
+        .question-box select,
+        .question-box textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .question-box textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .post-question {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #5b5ce2;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="questions-page">
+
+    <div class="questions-header">
+        <div>
+            <h1>❓ Student Questions</h1>
+            <p>Ask questions and get help from other students.</p>
+        </div>
+
+        <button class="ask-btn" id="openQuestion">
+            + Ask a Question
+        </button>
+    </div>
+
+    <div id="questionsList"></div>
+
+</div>
+
+
+<!-- QUESTION MODAL -->
+
+<div class="question-modal" id="questionModal">
+
+    <div class="question-box">
+
+        <button class="close-question" id="closeQuestion">
+            ×
+        </button>
+
+        <h2>Ask a Question</h2>
+
+        <form id="questionForm">
+
+            <label>Question Title</label>
+            <input
+                type="text"
+                id="questionTitle"
+                placeholder="Example: How to prepare for DBMS?"
+                required
+            >
+
+            <label>Category</label>
+
+            <select id="questionCategory" required>
+                <option value="">Select Category</option>
+                <option>Academic</option>
+                <option>Programming</option>
+                <option>Career</option>
+                <option>General</option>
+            </select>
+
+            <label>Your Question</label>
+
+            <textarea
+                id="questionDescription"
+                placeholder="Write your question..."
+                required
+            ></textarea>
+
+            <button class="post-question" type="submit">
+                Post Question
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const modal = document.getElementById("questionModal");
+const openButton = document.getElementById("openQuestion");
+const closeButton = document.getElementById("closeQuestion");
+const form = document.getElementById("questionForm");
+const list = document.getElementById("questionsList");
+
+openButton.onclick = function() {
+    modal.classList.add("show");
+};
+
+closeButton.onclick = function() {
+    modal.classList.remove("show");
+};
+
+function displayQuestions() {
+
+    const questions =
+        JSON.parse(localStorage.getItem("campusQuestions")) || [];
+
+    if (questions.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty-questions">
+                <h2>No questions yet</h2>
+                <p>Be the first student to ask a question!</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML = questions
+        .slice()
+        .reverse()
+        .map(question => `
+
+            <div class="question-card">
+
+                <span class="question-category">
+                    ${question.category}
+                </span>
+
+                <h3>${question.title}</h3>
+
+                <p>${question.description}</p>
+
+                <div class="question-meta">
+                    Asked by <strong>${question.author}</strong>
+                    • ${question.date}
+                </div>
+
+            </div>
+
+        `)
+        .join("");
+}
+
+
+form.onsubmit = function(event) {
+
+    event.preventDefault();
+
+    const questions =
+        JSON.parse(localStorage.getItem("campusQuestions")) || [];
+
+    const user =
+        JSON.parse(localStorage.getItem("campusUser")) || {};
+
+    questions.push({
+
+        id: Date.now(),
+
+        title:
+            document.getElementById("questionTitle").value.trim(),
+
+        category:
+            document.getElementById("questionCategory").value,
+
+        description:
+            document.getElementById("questionDescription").value.trim(),
+
+        author:
+            user.name || "CampusConnect Student",
+
+        date:
+            new Date().toLocaleDateString("en-IN")
+
+    });
+
+    localStorage.setItem(
+        "campusQuestions",
+        JSON.stringify(questions)
+    );
+
+    form.reset();
+
+    modal.classList.remove("show");
+
+    displayQuestions();
+
+    alert("Question posted successfully! 🎉");
+};
+
+
+displayQuestions();
+
+</script>
+
+</body>
+</html>

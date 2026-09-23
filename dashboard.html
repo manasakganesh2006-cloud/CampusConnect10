@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | CampusConnect</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+    <!-- =========================
+         DASHBOARD NAVIGATION
+    ========================== -->
+
+    <header class="dashboard-navbar">
+
+        <div class="logo">
+            Campus<span>Connect</span>
+        </div>
+
+
+        <div class="dashboard-user">
+
+            <div class="user-avatar" id="userAvatar">
+                M
+            </div>
+
+
+            <div class="user-info">
+
+                <strong id="dashboardUserName">
+                    Student
+                </strong>
+
+                <span id="dashboardUserDepartment">
+                    Student
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="logoutButton"
+                class="logout-btn"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================
+         DASHBOARD LAYOUT
+    ========================== -->
+
+    <div class="dashboard-layout">
+
+
+        <!-- =========================
+             SIDEBAR
+        ========================== -->
+
+        <aside class="sidebar">
+
+            <nav class="sidebar-nav">
+
+                <a
+                    href="#"
+                    class="sidebar-link active"
+                >
+                    <span>🏠</span>
+                    Dashboard
+                </a>
+
+
+                <a
+                    href="#announcements"
+                    class="sidebar-link"
+                >
+                    <span>📢</span>
+                    Announcements
+                </a>
+
+
+                <a
+                    href="#resources"
+                    class="sidebar-link"
+                >
+                    <span>📚</span>
+                    Resources
+                </a>
+
+
+                <a
+                    href="#opportunities"
+                    class="sidebar-link"
+                >
+                    <span>💼</span>
+                    Opportunities
+                </a>
+
+
+                <a
+    href="events.html"
+    class="sidebar-link"
+>
+    <span>📅</span>
+    Events
+</a>
+
+
+                <a
+    href="lost-found.html"
+    class="sidebar-link"
+>
+    <span>🔍</span>
+    Lost & Found
+</a>
+
+                <a
+    href="questions.html"
+    class="sidebar-link"
+>
+    <span>❓</span>
+    Questions
+</a>
+<a
+    href="#bookmarks"
+    class="sidebar-link"
+    id="bookmarksLink"
+>
+    <span>🔖</span>
+    Bookmarks
+</a>
+<a
+    href="#notifications"
+    class="sidebar-link"
+    id="notificationsLink"
+>
+    <span>🔔</span>
+    Notifications
+</a>
+
+<a
+    href="#profile"
+    class="sidebar-link"
+    id="profileLink"
+>
+    <span>👤</span>
+    Profile
+</a>
+
+<a
+    href="#statistics"
+    class="sidebar-link"
+    id="statisticsLink"
+>
+    <span>📊</span>
+    Statistics
+</a>
+
+</nav>
+<!-- NOTIFICATIONS SECTION -->
+<section
+    id="notifications"
+    class="dashboard-section"
+>
+    <div class="section-heading">
+        <div>
+            <h2>🔔 Notifications</h2>
+            <p>Important updates from CampusConnect</p>
+        </div>
+    </div>
+
+    <div id="notificationsList"></div>
+</section>
+<section
+
+<-- PROFILE SECTION -->
+<section
+    id="profile"
+    class="dashboard-section"
+>
+    <div class="section-heading">
+        <div>
+            <h2>👤 My Profile</h2>
+            <p>Your CampusConnect account information</p>
+        </div>
+    </div>
+
+    <div class="profile-card">
+
+        <div class="profile-avatar" id="profileAvatar">
+            M
+        </div>
+
+        <div class="profile-info">
+
+            <h3 id="profileName">
+                Student
+            </h3>
+
+            <p>
+                📧 <strong>Email:</strong>
+                <span id="profileEmail">Not available</span>
+            </p>
+
+            <p>
+                🏫 <strong>Department:</strong>
+                <span id="profileDepartment">Not available</span>
+            </p>
+
+            <p>
+                🎓 <strong>Year:</strong>
+                <span id="profileYear">Not available</span>
+            </p>
+
+        </div>
+
+    </div>
+</section>
+            
+
+
+            <div class="sidebar-bottom">
+
+                <a
+                    href="#"
+                    class="sidebar-link"
+                >
+                    <span>⚙️</span>
+                    Settings
+                </a>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =========================
+             MAIN DASHBOARD
+        ========================== -->
+
+        <main class="dashboard-main">
+
+
+            <!-- =========================
+                 WELCOME
+            ========================== -->
+
+            <section class="dashboard-welcome">
+
+                <div>
+
+                    <p class="dashboard-label">
+                        STUDENT DASHBOARD
+                    </p>
+
+
+                    <h1>
+                        Welcome back,
+                        <span id="welcomeUserName">
+                            Student
+                        </span>! 👋
+                    </h1>
+
+
+                    <p>
+                        Here's what's happening around your campus today.
+                    </p>
+
+                <!-- GLOBAL SEARCH -->
+<div class="dashboard-search">
+    <input
+        type="text"
+        id="globalSearch"
+        placeholder="Search announcements, resources, events..."
+    >
+
+    <button
+        type="button"
+        id="globalSearchButton"
+    >
+        🔍 Search
+    </button>
+</div>
+
+
+<div id="searchResults" class="search-results"></div>
+
+
+                <button
+                    type="button"
+                    class="create-post-btn"
+                    id="createPostButton"
+                >
+                    + Create Post
+                </button>
+
+            </section>
+
+
+
+            <!-- =========================
+                 STATISTICS
+            ========================== -->
+
+            <section class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📢
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Announcements
+                        </span>
+
+                        <strong id="announcementCount">
+                            12
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📚
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Resources
+                        </span>
+
+                        <strong id="resourceCount">
+                            28
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        💼
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Opportunities
+                        </span>
+
+                        <strong>
+                            8
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📅
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Upcoming Events
+                        </span>
+
+                        <strong>
+                            5
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
+                 DASHBOARD CONTENT
+            ========================== -->
+
+            <section class="dashboard-content-grid">
+
+
+                <!-- =========================
+                     ANNOUNCEMENTS
+                ========================== -->
+
+                <div
+                    class="dashboard-panel"
+                    id="announcements"
+                >
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p>
+                                STAY UPDATED
+                            </p>
+
+                            <h2>
+                                Recent Announcements
+                            </h2>
+
+                        </div>
+
+
+                        <div class="announcement-actions">
+
+                            
+
+                            <a href="#announcements">
+                                View all →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Announcements will appear here -->
+
+                    <div
+                        class="dashboard-list"
+                        id="announcementList"
+                    >
+
+                        <div class="dashboard-list-item">
+
+                            <div class="list-icon">
+                                📢
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Semester Examination Schedule
+                                </h3>
+
+                                <p>
+                                    The examination timetable has been published.
+                                </p>
+
+                                <small>
+                                    2 hours ago
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="dashboard-list-item">
+
+                            <div class="list-icon">
+                                📚
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    New Study Materials Available
+                                </h3>
+
+                                <p>
+                                    New DBMS resources have been uploaded.
+                                </p>
+
+                                <small>
+                                    Yesterday
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="dashboard-list-item">
+
+                            <div class="list-icon">
+                                📢
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Library Timing Updated
+                                </h3>
+
+                                <p>
+                                    The library will remain open until 8 PM.
+                                </p>
+
+                                <small>
+                                    2 days ago
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================
+                     UPCOMING EVENTS
+                ========================== -->
+
+                <div
+                    class="dashboard-panel"
+                    id="events"
+                >
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p>
+                                DON'T MISS OUT
+                            </p>
+
+                            <h2>
+                                Upcoming Events
+                            </h2>
+
+                        </div>
+
+
+                        <a href="#events">
+                            View all →
+                        </a>
+
+                    </div>
+
+
+
+                    <div class="mini-event">
+
+                        <div class="mini-event-date">
+
+                            <strong>
+                                18
+                            </strong>
+
+                            <span>
+                                SEP
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                TECHNOLOGY
+                            </span>
+
+                            <h3>
+                                Campus Hackathon 2026
+                            </h3>
+
+                            <p>
+                                Innovation Lab · 10:00 AM
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="mini-event">
+
+                        <div class="mini-event-date">
+
+                            <strong>
+                                24
+                            </strong>
+
+                            <span>
+                                SEP
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                CAREER
+                            </span>
+
+                            <h3>
+                                Career & Internship Workshop
+                            </h3>
+
+                            <p>
+                                Seminar Hall · 2:00 PM
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="mini-event">
+
+                        <div class="mini-event-date">
+
+                            <strong>
+                                30
+                            </strong>
+
+                            <span>
+                                SEP
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                CULTURAL
+                            </span>
+
+                            <h3>
+                                Campus Cultural Fest
+                            </h3>
+
+                            <p>
+                                Main Auditorium · 5:00 PM
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
+                 OPPORTUNITIES
+            ========================== -->
+
+            <section
+                class="dashboard-panel full-panel"
+                id="opportunities"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p>
+                            CAREER
+                        </p>
+
+                        <h2>
+                            Latest Opportunities
+                        </h2>
+
+                    </div>
+
+
+                    <a
+    href="opportunities.html"
+    class="sidebar-link"
+>
+    <span>💼</span>
+    Opportunities
+</a>
+
+                </div>
+
+
+
+                <div class="opportunity-dashboard-grid">
+
+
+                    <div class="dashboard-opportunity">
+
+                        <span>
+                            INTERNSHIP
+                        </span>
+
+                        <h3>
+                            Frontend Developer Intern
+                        </h3>
+
+                        <p>
+                            TechNova Solutions
+                        </p>
+
+                        <button type="button">
+                            View Opportunity
+                        </button>
+
+                    </div>
+
+
+
+                    <div class="dashboard-opportunity">
+
+                        <span>
+                            HACKATHON
+                        </span>
+
+                        <h3>
+                            National Innovation Challenge
+                        </h3>
+
+                        <p>
+                            Online · Team Registration
+                        </p>
+
+                        <button type="button">
+                            View Opportunity
+                        </button>
+
+                    </div>
+
+
+
+                    <div class="dashboard-opportunity">
+
+                        <span>
+                            WORKSHOP
+                        </span>
+
+                        <h3>
+                            AI & Machine Learning Workshop
+                        </h3>
+
+                        <p>
+                            Computer Science Club
+                        </p>
+
+                        <button type="button">
+                            View Opportunity
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
+                 RESOURCES
+            ========================== -->
+
+            <section
+                class="dashboard-panel full-panel"
+                id="resources"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p>
+                            STUDY MATERIALS
+                        </p>
+
+                        <h2>
+                            Resources & Notes
+                        </h2>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="announcement-create-btn"
+                        id="shareResourceButtonTop"
+                    >
+                        + Share Resource
+                    </button>
+
+                </div>
+
+
+                <div class="resources-grid">
+
+
+                    <!-- Resource 1 -->
+
+                    <div class="resource-card">
+
+                        <div class="resource-icon">
+                            📘
+                        </div>
+
+                        <div class="resource-content">
+
+                            <span class="resource-category">
+                                DATABASE MANAGEMENT
+                            </span>
+
+                            <h3>
+                                DBMS Study Notes
+                            </h3>
+
+                            <p>
+                                Complete study material covering database concepts,
+                                SQL, normalization and transactions.
+                            </p>
+
+                            <div class="resource-meta">
+
+                                <span>
+                                    📄 PDF
+                                </span>
+
+                                <span>
+                                    👤 Faculty
+                                </span>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="resource-view-btn"
+                                onclick="openResource('DBMS Study Notes')"
+                            >
+                                View Resource
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Resource 2 -->
+
+                    <div class="resource-card">
+
+                        <div class="resource-icon">
+                            💻
+                        </div>
+
+                        <div class="resource-content">
+
+                            <span class="resource-category">
+                                PROGRAMMING
+                            </span>
+
+                            <h3>
+                                Java Programming Notes
+                            </h3>
+
+                            <p>
+                                Important Java concepts, object-oriented programming
+                                and commonly used programming examples.
+                            </p>
+
+                            <div class="resource-meta">
+
+                                <span>
+                                    📄 PDF
+                                </span>
+
+                                <span>
+                                    👤 Student
+                                </span>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="resource-view-btn"
+                                onclick="openResource('Java Programming Notes')"
+                            >
+                                View Resource
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Resource 3 -->
+
+                    <div class="resource-card">
+
+                        <div class="resource-icon">
+                            🤖
+                        </div>
+
+                        <div class="resource-content">
+
+                            <span class="resource-category">
+                                ARTIFICIAL INTELLIGENCE
+                            </span>
+
+                            <h3>
+                                Machine Learning Basics
+                            </h3>
+
+                            <p>
+                                Beginner-friendly notes covering machine learning
+                                algorithms, datasets and model evaluation.
+                            </p>
+
+                            <div class="resource-meta">
+
+                                <span>
+                                    📄 PDF
+                                </span>
+
+                                <span>
+                                    👤 Student
+                                </span>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="resource-view-btn"
+                                onclick="openResource('Machine Learning Basics')"
+                            >
+                                View Resource
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Resource 4 -->
+
+                    <div class="resource-card">
+
+                        <div class="resource-icon">
+                            🌐
+                        </div>
+
+                        <div class="resource-content">
+
+                            <span class="resource-category">
+                                WEB DEVELOPMENT
+                            </span>
+
+                            <h3>
+                                HTML, CSS & JavaScript Guide
+                            </h3>
+
+                            <p>
+                                Useful learning material for frontend development
+                                including HTML, CSS and JavaScript basics.
+                            </p>
+
+                            <div class="resource-meta">
+
+                                <span>
+                                    📄 PDF
+                                </span>
+
+                                <span>
+                                    👤 Student
+                                </span>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="resource-view-btn"
+                                onclick="openResource('HTML, CSS & JavaScript Guide')"
+                            >
+                                View Resource
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
+                 QUICK ACTIONS
+            ========================== -->
+
+            <section class="quick-actions">
+
+                <div class="section-heading">
+
+                    <p>
+                        QUICK ACTIONS
+                    </p>
+
+                    <h2>
+                        What would you like to do?
+                    </h2>
+
+                </div>
+
+
+
+                <div class="action-grid">
+
+
+                    <button
+                        type="button"
+                        class="action-card"
+                        id="shareResourceButton"
+                    >
+
+                        <span>
+                            📚
+                        </span>
+
+                        <strong>
+                            Share Resource
+                        </strong>
+
+                        <small>
+                            Help other students learn
+                        </small>
+
+                    </button>
+
+
+
+                    <button
+                        type="button"
+                        class="action-card"
+                        id="lostItemButton"
+                    >
+
+                        <span>
+                            🔎
+                        </span>
+
+                        <strong>
+                            Report Lost Item
+                        </strong>
+
+                        <small>
+                            Help find a lost item
+                        </small>
+
+                    </button>
+
+
+
+                    <button
+    type="button"
+    id="askQuestionButton"
+    class="quick-action-button"
+>
+    <span>❓</span>
+    <strong>Ask a Question</strong>
+    <small>Get help from other students</small>
+</button>
+
+<!-- ASK QUESTION MODAL -->
+<div
+    class="question-modal-overlay"
+    id="questionModal"
+>
+    <div class="question-modal">
+
+        <button
+            type="button"
+            class="question-close"
+            id="closeQuestionButton"
+        >
+            ×
+        </button>
+
+        <div class="question-header">
+            <p>STUDENT COMMUNITY</p>
+
+            <h2>Ask a Question</h2>
+
+            <span>
+                Ask something and get help from other students.
+            </span>
+        </div>
+
+        <form id="questionForm">
+
+            <div class="question-group">
+
+                <label for="questionTitle">
+                    Question Title
+                </label>
+
+                <input
+                    type="text"
+                    id="questionTitle"
+                    placeholder="Example: How can I prepare for DBMS?"
+                    required
+                >
+
+            </div>
+
+            <div class="question-group">
+
+                <label for="questionCategory">
+                    Category
+                </label>
+
+                <select id="questionCategory" required>
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                    <option value="Academic">
+                        Academic
+                    </option>
+
+                    <option value="Programming">
+                        Programming
+                    </option>
+
+                    <option value="Career">
+                        Career
+                    </option>
+
+                    <option value="General">
+                        General
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="question-group">
+
+                <label for="questionDescription">
+                    Your Question
+                </label>
+
+                <textarea
+                    id="questionDescription"
+                    placeholder="Write your question here..."
+                    required
+                ></textarea>
+
+            </div>
+
+            <button
+                type="submit"
+                class="question-submit"
+            >
+                Post Question
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+
+                    <button
+                        type="button"
+                        class="action-card"
+                        id="postOpportunityButton"
+                    >
+
+                        <span>
+                            💼
+                        </span>
+
+                        <strong>
+                            Post Opportunity
+                        </strong>
+
+                        <small>
+                            Share an opportunity
+                        </small>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+
+    
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
